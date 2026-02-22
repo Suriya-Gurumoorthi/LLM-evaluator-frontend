@@ -1,15 +1,17 @@
 import { Outlet, Link, useLocation } from "react-router";
-import { BarChart3, FileText, GitCompare, LayoutDashboard, Activity, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
+// Icons for commented nav items: BarChart3, FileText, GitCompare, LayoutDashboard, Activity
 
 export function RootLayout() {
   const location = useLocation();
   
   const navItems = [
-    { path: "/", label: "Overview", icon: LayoutDashboard },
-    { path: "/tracing", label: "Tracing", icon: Activity },
-    { path: "/comparison", label: "Comparison", icon: GitCompare },
-    { path: "/evaluation-details", label: "Evaluations", icon: FileText },
-    { path: "/analytics", label: "Analytics", icon: BarChart3 },
+    // Temporarily commented out - keeping only Prompt Management
+    // { path: "/", label: "Overview", icon: LayoutDashboard },
+    // { path: "/tracing", label: "Tracing", icon: Activity },
+    // { path: "/comparison", label: "Comparison", icon: GitCompare },
+    // { path: "/evaluation-details", label: "Evaluations", icon: FileText },
+    // { path: "/analytics", label: "Analytics", icon: BarChart3 },
     { path: "/prompt-management", label: "Prompt Management", icon: Sparkles },
   ];
   
