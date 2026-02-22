@@ -23,7 +23,8 @@ import {
   Sparkles,
 } from "lucide-react";
 
-const API_BASE = import.meta.env.VITE_API_URL ?? "/api/v1";
+const API_BASE =
+  import.meta.env.VITE_API_URL ?? "https://llm-evaluator-backend.onrender.com/api/v1";
 
 const DOMAINS = [
   { id: "coding", name: "Coding", description: "Programming and software development" },
