@@ -366,20 +366,24 @@ export function PromptManagementPage() {
   // =====================================================================
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <div className="mb-8">
-        <h2 className="text-3xl font-semibold text-gray-900">Prompt Management</h2>
-        <p className="text-gray-500 mt-2">Configure and evaluate your prompts step by step</p>
+    <div className="w-full min-w-0 p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto box-border">
+      <div className="mb-6 sm:mb-8">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 break-words">
+          Prompt Management
+        </h2>
+        <p className="text-gray-500 mt-2 text-sm sm:text-base">
+          Configure and evaluate your prompts step by step
+        </p>
       </div>
 
-      {/* ── Progress Stepper ── */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
+      {/* ── Progress Stepper - responsive layout ── */}
+      <div className="mb-6 sm:mb-8 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex items-start justify-between min-w-[280px] sm:min-w-0">
           {[1, 2, 3].map((phase) => (
-            <div key={phase} className="flex items-center flex-1">
-              <div className="flex flex-col items-center flex-1">
+            <div key={phase} className="flex items-center flex-1 min-w-0">
+              <div className="flex flex-col items-center flex-1 min-w-0">
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
+                  className={`w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-full flex items-center justify-center border-2 ${
                     currentPhase === phase
                       ? "bg-blue-600 border-blue-600 text-white"
                       : currentPhase > phase
@@ -388,13 +392,15 @@ export function PromptManagementPage() {
                   }`}
                 >
                   {currentPhase > phase ? (
-                    <CheckCircle2 className="w-6 h-6" />
+                    <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
                   ) : (
-                    <span className="font-semibold">{phase}</span>
+                    <span className="font-semibold text-sm sm:text-base">{phase}</span>
                   )}
                 </div>
-                <p className="mt-2 text-sm font-medium text-gray-700">Phase {phase}</p>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="mt-2 text-xs sm:text-sm font-medium text-gray-700 text-center">
+                  Phase {phase}
+                </p>
+                <p className="text-[10px] sm:text-xs text-gray-500 mt-1 text-center hidden sm:block">
                   {phase === 1 && "Domain & Rubrics"}
                   {phase === 2 && "Prompt & Test Cases"}
                   {phase === 3 && "LLM Judge Results"}
@@ -402,7 +408,7 @@ export function PromptManagementPage() {
               </div>
               {phase < 3 && (
                 <div
-                  className={`h-0.5 flex-1 mx-4 ${
+                  className={`h-0.5 flex-1 mx-1 sm:mx-4 min-w-[8px] ${
                     currentPhase > phase ? "bg-green-600" : "bg-gray-300"
                   }`}
                 />
@@ -417,10 +423,10 @@ export function PromptManagementPage() {
          ================================================================ */}
       {currentPhase === 1 && (
         <div className="space-y-6">
-          <Card>
+          <Card className="min-w-0 overflow-hidden">
             <CardHeader>
-              <CardTitle>Select Domain</CardTitle>
-              <CardDescription>Choose the domain for your evaluation</CardDescription>
+              <CardTitle className="break-words">Select Domain</CardTitle>
+              <CardDescription className="break-words">Choose the domain for your evaluation</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -526,7 +532,7 @@ export function PromptManagementPage() {
           )}
 
           <div className="flex justify-end">
-            <Button onClick={handleNext} disabled={!isPhase1Complete} className="min-w-32">
+            <Button onClick={handleNext} disabled={!isPhase1Complete} className="min-w-32 w-full sm:w-auto">
               Next Phase
               <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
@@ -582,9 +588,9 @@ export function PromptManagementPage() {
                 </Select>
               </div>
               {selectedLLM && selectedLLMConfig && (
-                <div className="space-y-2">
+                <div className="space-y-2 min-w-0">
                   <Label htmlFor="api-key">{selectedLLMConfig.apiKeyLabel}</Label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Input
                       id="api-key"
                       type="password"
@@ -592,7 +598,7 @@ export function PromptManagementPage() {
                       placeholder={`Enter your ${selectedLLMConfig.apiKeyLabel}...`}
                       value={selectedApiKey}
                       onChange={(e) => setApiKeyForProvider(selectedProvider, e.target.value)}
-                      className="font-mono flex-1"
+                      className="font-mono flex-1 min-w-0"
                     />
                     <Button
                       type="button"
@@ -697,12 +703,12 @@ export function PromptManagementPage() {
             </CardContent>
           </Card>
 
-          <div className="flex justify-between">
-            <Button onClick={handlePrevious} variant="outline">
+          <div className="flex flex-col-reverse sm:flex-row justify-between gap-3">
+            <Button onClick={handlePrevious} variant="outline" className="w-full sm:w-auto">
               <ChevronLeft className="w-4 h-4 mr-2" />
               Previous
             </Button>
-            <Button onClick={handleNext} disabled={!isPhase2Complete} className="min-w-32">
+            <Button onClick={handleNext} disabled={!isPhase2Complete} className="min-w-32 w-full sm:w-auto">
               Next Phase
               <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
@@ -930,8 +936,8 @@ export function PromptManagementPage() {
                           {/* Expanded content */}
                           {isExpanded && (
                             <div className="px-4 pb-4 space-y-4 border-t">
-                              {/* Scores grid */}
-                              <div className="grid grid-cols-3 gap-3 pt-4">
+                              {/* Scores grid - stack on mobile, 3 cols on sm+ */}
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 pt-4">
                                 {(
                                   [
                                     ["Correctness", tcs.correctness],
@@ -1006,14 +1012,14 @@ export function PromptManagementPage() {
             </>
           )}
 
-          {/* ── Bottom navigation ── */}
-          <div className="flex justify-between">
-            <Button onClick={handlePrevious} variant="outline">
+          {/* ── Bottom navigation - responsive stacking ── */}
+          <div className="flex flex-col-reverse sm:flex-row justify-between gap-3">
+            <Button onClick={handlePrevious} variant="outline" className="w-full sm:w-auto">
               <ChevronLeft className="w-4 h-4 mr-2" />
               Previous
             </Button>
-            <div className="flex gap-2">
-              <Button onClick={handleReset} variant="outline">
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <Button onClick={handleReset} variant="outline" className="w-full sm:w-auto">
                 Start Over
               </Button>
               {analysisResults && (
@@ -1023,6 +1029,7 @@ export function PromptManagementPage() {
                     handleAnalyze();
                   }}
                   disabled={isAnalyzing}
+                  className="w-full sm:w-auto"
                 >
                   {isAnalyzing ? (
                     <>

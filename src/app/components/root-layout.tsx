@@ -1,7 +1,20 @@
 import { Outlet, Link, useLocation } from "react-router";
 import { useEffect } from "react";
 import { Sparkles } from "lucide-react";
-// Icons for commented nav items: BarChart3, FileText, GitCompare, LayoutDashboard, Activity
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+  SidebarInset,
+  useSidebar,
+} from "@/app/components/ui/sidebar";
 
 const BACKEND_BASE =
   new URL(
@@ -9,62 +22,83 @@ const BACKEND_BASE =
   ).origin;
 const HEALTH_URL = `${BACKEND_BASE}/health`;
 
-export function RootLayout() {
-  const location = useLocation();
+const navItems = [
+  { path: "/prompt-management", label: "Prompt Management", icon: Sparkles },
+];
 
+function NavLinks() {
+  const location = useLocation();
+  const { setOpenMobile, isMobile } = useSidebar();
+
+  return (
+    <>
+      {navItems.map((item) => {
+        const Icon = item.icon;
+        const isActive = location.pathname === item.path;
+
+        return (
+          <SidebarMenuItem key={item.path}>
+            <SidebarMenuButton asChild isActive={isActive}>
+              <Link
+                to={item.path}
+                onClick={() => isMobile && setOpenMobile(false)}
+              >
+                <Icon className="size-4" />
+                <span>{item.label}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        );
+      })}
+    </>
+  );
+}
+
+export function RootLayout() {
   // Wake up backend on free tier (Render, etc.) by pinging health endpoint on mount
   useEffect(() => {
     fetch(HEALTH_URL).catch(() => {
       // Fire-and-forget; we just want to wake the server
     });
   }, []);
-  
-  const navItems = [
-    // Temporarily commented out - keeping only Prompt Management
-    // { path: "/", label: "Overview", icon: LayoutDashboard },
-    // { path: "/tracing", label: "Tracing", icon: Activity },
-    // { path: "/comparison", label: "Comparison", icon: GitCompare },
-    // { path: "/evaluation-details", label: "Evaluations", icon: FileText },
-    // { path: "/analytics", label: "Analytics", icon: BarChart3 },
-    { path: "/prompt-management", label: "Prompt Management", icon: Sparkles },
-  ];
-  
+
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200">
-        <div className="p-6">
-          <h1 className="text-xl font-semibold text-gray-900">LLM Evaluator</h1>
-          <p className="text-sm text-gray-500 mt-1">Performance Dashboard</p>
-        </div>
-        
-        <nav className="px-3">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
-            
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg mb-1 transition-colors ${
-                  isActive
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </aside>
-      
-      {/* Main Content */}
-      <main className="flex-1 overflow-auto">
-        <Outlet />
-      </main>
-    </div>
+    <SidebarProvider defaultOpen={false}>
+      <Sidebar side="left" collapsible="offcanvas" className="border-r border-gray-200">
+        <SidebarHeader className="border-b border-gray-200 p-4">
+          <div>
+            <h1 className="text-lg font-semibold text-gray-900">LLM Evaluator</h1>
+            <p className="text-xs text-gray-500 mt-0.5">Performance Dashboard</p>
+          </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <NavLinks />
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+
+      <SidebarInset className="min-w-0">
+        {/* Top bar with menu toggle - visible on all screen sizes */}
+        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b border-gray-200 bg-white px-4 md:px-6">
+          <SidebarTrigger
+            className="-ml-1"
+            aria-label="Toggle sidebar"
+          />
+          <span className="text-sm font-medium text-gray-600 md:sr-only">
+            Menu
+          </span>
+        </header>
+
+        {/* Main content - scrollable, mobile-friendly */}
+        <main className="flex-1 overflow-auto min-h-0">
+          <Outlet />
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
