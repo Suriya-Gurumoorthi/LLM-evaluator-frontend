@@ -1,9 +1,23 @@
 import { Outlet, Link, useLocation } from "react-router";
+import { useEffect } from "react";
 import { Sparkles } from "lucide-react";
 // Icons for commented nav items: BarChart3, FileText, GitCompare, LayoutDashboard, Activity
 
+const BACKEND_BASE =
+  new URL(
+    import.meta.env.VITE_API_URL ?? "https://llm-evaluator-backend.onrender.com/api/v1"
+  ).origin;
+const HEALTH_URL = `${BACKEND_BASE}/health`;
+
 export function RootLayout() {
   const location = useLocation();
+
+  // Wake up backend on free tier (Render, etc.) by pinging health endpoint on mount
+  useEffect(() => {
+    fetch(HEALTH_URL).catch(() => {
+      // Fire-and-forget; we just want to wake the server
+    });
+  }, []);
   
   const navItems = [
     // Temporarily commented out - keeping only Prompt Management
